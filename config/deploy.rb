@@ -78,7 +78,7 @@ task :deploy => :environment do
     # instance of your project.
     #invoke "rsync:deploy"
     invoke :'git:clone'
-    queue "composer install --prefer-source"
+    # queue "composer install --prefer-source"
     # invoke :'deploy:link_shared_paths'
     # invoke :'bundle:install'
     # invoke :'rails:db_migrate'
