@@ -1,0 +1,75 @@
+<html>
+<head>
+<script>
+    var isLan = false;
+    var nextLan = false;
+    var now = new Date();
+    var dates = [
+        [["2018-08-23 16:00"], ["2018-08-27 12:00"]]
+    ];
+    
+    for (var x=0; x<dates.length; x++) {
+        var from = new Date(dates[x][0]);
+        var to = new Date(dates[x][1]);
+        if (from < now && now < to) {
+            isLan = true;
+            break;
+        }
+
+        if (now < from) {
+            nextLan = from;
+            break;
+        }
+    }
+    
+    var primaryText = (isLan ? "Yes!" : "No");
+    var secondaryText = "";
+</script>
+<style>
+body {
+#background-color: #000;
+#color: #fff;
+font-family:arial,helvetica;
+text-align: center;
+}
+#PrimaryText {
+margin: 0px auto;
+margin-top: 150px;
+width: 1000px;
+text-align:center;
+font-size:5em;
+}
+#SecondaryText {
+font-size: 1.5em;
+margin: 0px auto;
+margin-top: 50px;
+width: 1000px;
+text-align:center;
+}
+</style>
+<title>Is it LAN Time?</title>
+</head>
+<body>
+<div id="PrimaryText"></div>
+<div id="SecondaryText"></div>
+<script>
+    document.getElementById("PrimaryText").innerText=primaryText;
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
+<script>
+    function UpdateTime() {
+        if (new Date() < nextLan) {
+            document.getElementById("SecondaryText").innerText = "next lan in " + countdown( nextLan ).toString() + "...";
+        } else {
+            window.location.reload();
+        }
+    }
+
+    if (nextLan !== false) {
+        setInterval(UpdateTime, 1000);
+        UpdateTime();
+    }
+</script>
+</body>
+</html>
+
