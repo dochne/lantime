@@ -5,12 +5,14 @@
     var nextLan = false;
     var now = new Date();
     var dates = [
-        [["2018-08-23 16:00"], ["2018-08-27 12:00"]]
+        {from: "2018-08-23 16:00"], to: "2018-08-27 12:00"},
+        {from: "2022-08-26 16:00"], to: "2022-08-29 12:00"}
+        
     ];
     
     for (var x=0; x<dates.length; x++) {
-        var from = new Date(dates[x][0]);
-        var to = new Date(dates[x][1]);
+        var from = new Date(dates[x].from);
+        var to = new Date(dates[x].to);
         if (from < now && now < to) {
             isLan = true;
             break;
