@@ -1,75 +1,76 @@
+<!doctype html>
 <html>
 <head>
-<script>
-    var isLan = false;
-    var nextLan = false;
-    var now = new Date();
-    var dates = [
-        {from: "2018-08-23 16:00", to: "2018-08-27 12:00"},
-        {from: "2022-08-26 16:00", to: "2022-08-29 12:00"}
-        
-    ];
-    
-    for (var x=0; x<dates.length; x++) {
-        var from = new Date(dates[x].from);
-        var to = new Date(dates[x].to);
-        if (from < now && now < to) {
-            isLan = true;
-            break;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        if (now < from) {
-            nextLan = from;
-            break;
-        }
+<style>
+    body {
+        font-family:arial,helvetica;
+        text-align: center;
     }
     
-    var primaryText = (isLan ? "Yes!" : "No");
-    var secondaryText = "";
-</script>
-<style>
-body {
-#background-color: #000;
-#color: #fff;
-font-family:arial,helvetica;
-text-align: center;
-}
-#PrimaryText {
-margin: 0px auto;
-margin-top: 150px;
-width: 1000px;
-text-align:center;
-font-size:5em;
-}
-#SecondaryText {
-font-size: 1.5em;
-margin: 0px auto;
-margin-top: 50px;
-width: 1000px;
-text-align:center;
-}
+    #primary {
+        margin: 0px auto;
+        margin-top: 150px;
+        text-align:center;
+        font-size:5em;
+    }
+    
+    #secondary {
+        font-size: 1.5em;
+        margin: 0px auto;
+        margin-top: 50px;
+        text-align:center;
+    }
 </style>
+
+<script>   
+    // We use this date format as Safari is mean
+    const dates = [
+        {from: "2018/08/23 16:00", to: "2018/08/27 12:00"},
+        {from: "2022/08/26 16:00", to: "2022/08/29 12:00"}
+    ].map(({from, to}) => ({from: new Date(from), to: new Date(to)}));
+
+    const now = new Date();
+
+    const {isLan, nextLan} = dates.reduce((acc, {from, to}) => {
+        if (from < now && now < to) {
+            return {...acc, isLan: true};
+        }
+
+        if (!acc.nextLan && now < from) {
+            return {...acc, nextLan: from};
+        }
+
+        return acc;
+    }, {isLan: false, nextLan: null});
+
+</script>
+
 <title>Is it LAN Time?</title>
 </head>
 <body>
-<div id="PrimaryText"></div>
-<div id="SecondaryText"></div>
+<p id="primary"></p>
+<p id="secondary"></p>
 <script>
-    document.getElementById("PrimaryText").innerText=primaryText;
+    const primary = document.getElementById("primary");
+    const secondary = document.getElementById("secondary");
+    primary.innerText = (isLan ? "Yes!" : "No");
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
 <script>
-    function UpdateTime() {
+    function updateTime() {
         if (new Date() < nextLan) {
-            document.getElementById("SecondaryText").innerText = "next lan in " + countdown( nextLan ).toString() + "...";
-        } else {
-            window.location.reload();
+            secondary.innerText = "next lan in " + countdown( nextLan ).toString() + "...";
+            return;
         }
+
+        window.location.reload();
     }
 
-    if (nextLan !== false) {
-        setInterval(UpdateTime, 1000);
-        UpdateTime();
+    if (!isLan && nextLan) {
+        setInterval(updateTime, 1000);
+        updateTime();
     }
 </script>
 </body>
